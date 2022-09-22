@@ -6,5 +6,5 @@ Spring Boot REST API Documentation Using Swagger 2 With Springfox
 
 To open the swagger you can go to http://localhost:8080/swagger-ui.html
 
-Screenshot
+# Screenshot
 ![swagger](https://user-images.githubusercontent.com/59878125/191770715-a7e2f749-3363-46a9-ab1f-8e1d83f96f46.png)
