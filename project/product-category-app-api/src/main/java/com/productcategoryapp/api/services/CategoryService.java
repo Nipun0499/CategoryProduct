@@ -2,7 +2,6 @@ package com.productcategoryapp.api.services;
 
 import java.util.List;
 
-import com.productcategoryapp.api.entity.Category;
 import com.productcategoryapp.api.payloads.CategoryDto;
 
 

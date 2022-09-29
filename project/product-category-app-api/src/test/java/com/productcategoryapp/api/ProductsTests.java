@@ -37,8 +37,8 @@ public class ProductsTests {
 
     @Test
     void getProductTest() {
-        Product p1 = new Product(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date(), true, false);
-        Product p2 = new Product(1, null,"Monitor","HP", "This category is of Laptop",100000, new Date(), new Date(), true, false);
+        Product p1 = new Product(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date());
+        Product p2 = new Product(1, null,"Monitor","HP", "This category is of Laptop",100000, new Date(), new Date());
         List<Product> list = new ArrayList<>();
         list.add(p1);
         list.add(p2);
@@ -54,7 +54,7 @@ public class ProductsTests {
 
     @Test
     void getProductByIdTest() {
-        Product p1=new Product(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date(), true, false);
+        Product p1=new Product(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date());
     	ProductDto p2=modelMapper.map(p1, ProductDto.class);
         Mockito.when(repo.findById(1)).thenReturn(Optional.of(p1));
         assertThat(service.getProduct(1)).isEqualTo(p2);
@@ -65,7 +65,7 @@ public class ProductsTests {
     
     @Test
     void updateProductTest() {
-        ProductDto p = new ProductDto(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date(), true, false);
+        ProductDto p = new ProductDto(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date());
         Product p2=modelMapper.map(p, Product.class);
         Mockito.when(repo.save(p2)).thenReturn(p2);
         assertThat(service.updateProduct(p)).isEqualTo(p);
@@ -75,7 +75,7 @@ public class ProductsTests {
 
     @Test
     void addProductTest() {
-        ProductDto p = new ProductDto(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date(), true, false);
+        ProductDto p = new ProductDto(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date());
         Product p2=modelMapper.map(p,Product.class);
         Mockito.when(repo.save(p2)).thenReturn(p2);
         assertThat(service.addProduct(p)).isEqualTo(p);
@@ -86,7 +86,7 @@ public class ProductsTests {
     
     @Test
     void deleteProductTest() {
-        Product p = new Product(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date(), true, false);
+        Product p = new Product(1, null,"Laptop","HP", "This category is of Laptop",100000, new Date(), new Date());
         Mockito.when(repo.findById(1)).thenReturn(Optional.of(p));
         ProductDto p1=modelMapper.map(p,ProductDto.class);
         p1.setActive(false);
@@ -96,9 +96,9 @@ public class ProductsTests {
     
     @Test
     void getProductTest1() {
-    	Category cs = new Category(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date(), true, false);
-        Product p1 = new Product(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2019,8,10), new Date(2022,7,10), true, false);
-        Product p2 = new Product(1, cs,"Monitor","HP", "This category is of Laptop",100000, new Date(), new Date(), true, false);
+    	Category cs = new Category(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date());
+        Product p1 = new Product(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2019,8,10), new Date(2022,7,10));
+        Product p2 = new Product(1, cs,"Monitor","HP", "This category is of Laptop",100000, new Date(), new Date());
         List<Product> list = new ArrayList<>();
         list.add(p1);
         list.add(p2);
@@ -114,8 +114,8 @@ public class ProductsTests {
 
     @Test
     void getProductByIdTest1() {
-    	Category cs = new Category(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date(), true, false);
-        Product p1=new Product(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2020,12,9), new Date(), true, false);
+    	Category cs = new Category(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date());
+        Product p1=new Product(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2020,12,9), new Date());
     	ProductDto p2=modelMapper.map(p1, ProductDto.class);
         Mockito.when(repo.findById(1)).thenReturn(Optional.of(p1));
         assertThat(service.getProduct(1)).isEqualTo(p2);
@@ -126,8 +126,8 @@ public class ProductsTests {
     
     @Test
     void updateProductTest1() {
-    	CategoryDto cs = new CategoryDto(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date(), true, false);
-        ProductDto p = new ProductDto(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2021,9,11), new Date(), true, false);
+    	CategoryDto cs = new CategoryDto(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date());
+        ProductDto p = new ProductDto(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2021,9,11), new Date());
         Product p2=modelMapper.map(p, Product.class);
         Mockito.when(repo.save(p2)).thenReturn(p2);
         assertThat(service.updateProduct(p)).isEqualTo(p);
@@ -137,8 +137,8 @@ public class ProductsTests {
 
     @Test
     void addProductTest1() {
-    	CategoryDto cs = new CategoryDto(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date(), true, false);
-        ProductDto p = new ProductDto(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2021,12,9), new Date(), true, false);
+    	CategoryDto cs = new CategoryDto(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date());
+        ProductDto p = new ProductDto(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2021,12,9), new Date());
         Product p2=modelMapper.map(p,Product.class);
         Mockito.when(repo.save(p2)).thenReturn(p2);
         assertThat(service.addProduct(p)).isEqualTo(p);
@@ -149,8 +149,8 @@ public class ProductsTests {
     
     @Test
     void deleteProductTest1() {
-    	Category cs = new Category(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date(), true, false);
-        Product p = new Product(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2022,9,18), new Date(), true, false);
+    	Category cs = new Category(1,null,"Laptop","This category is of Laptop", new Date(2022,5,6), new Date());
+        Product p = new Product(1, cs,"Laptop","HP", "This category is of Laptop",100000, new Date(2022,9,18), new Date());
         Mockito.when(repo.findById(1)).thenReturn(Optional.of(p));
         ProductDto p1=modelMapper.map(p,ProductDto.class);
         p1.setActive(false);

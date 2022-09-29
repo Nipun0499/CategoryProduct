@@ -9,8 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,23 +16,36 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Product {
 
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int product_id;
+	private int productId;
 	@ManyToOne(cascade=CascadeType.ALL)
 	private Category c;
-	private String product_name;
-	private String product_brand;
-	private String product_desc;
+	private String productName;
+	private String productBrand;
+	private String productDesc;
 	private long price;
 	private Date createDate;
 	private Date updateDate;
 	private boolean isActive;
-	private boolean isDeleted;	
+	private boolean isDeleted;
+	public Product(int productId, Category c, String productName, String productBrand, String productDesc, long price,
+			Date createDate, Date updateDate) {
+		super();
+		this.productId = productId;
+		this.c = c;
+		this.productName = productName;
+		this.productBrand = productBrand;
+		this.productDesc = productDesc;
+		this.price = price;
+		this.createDate = createDate;
+		this.updateDate = updateDate;
+		this.isActive = true;
+		this.isDeleted = false;
+	}	
 	
 	
 }

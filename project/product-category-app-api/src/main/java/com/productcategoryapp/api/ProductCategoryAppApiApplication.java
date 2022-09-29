@@ -12,11 +12,5 @@ public class ProductCategoryAppApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ProductCategoryAppApiApplication.class, args);
 	}
-	
-//	@Bean
-//	public ModelMapper modelMapper()
-//	{
-//		return new ModelMapper();
-//	}
 
 }

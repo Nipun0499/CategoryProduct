@@ -20,83 +20,67 @@ import com.productcategoryapp.api.utils.AppResponseProduct;
 import com.productcategoryapp.api.utils.AppResponseProductList;
 
 @RestController
-//@RequestMapping("/productcategory")
 public class ProductController {
 	
 
 	@Autowired
 	private ProductService p;
 	
+	
+	//GET Request to get the list of all products
 	@GetMapping("/product")
 	public ResponseEntity<AppResponseProductList> getProduct()
 	{
-		try
-		{
+		
 			return new ResponseEntity<>
 			(new AppResponseProductList(this.p.getProduct(),"Here are all Products!",true),HttpStatus.FOUND);
-		}
-		catch(Exception e)
-		{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		
 	}
 	
-	@GetMapping("/product/{ProductId}")
-	public ResponseEntity<AppResponseProduct> getProduct(@Valid @PathVariable String ProductId)
+	
+	
+	//GET request to get a particular product based on ID
+	@GetMapping("/product/{productId}")
+	public ResponseEntity<AppResponseProduct> getProduct(@Valid @PathVariable String productId)
 	{
-		try
-		{
+	
 			return new ResponseEntity<>
-			(new AppResponseProduct(this.p.getProduct(Integer.parseInt(ProductId)),
+			(new AppResponseProduct(this.p.getProduct(Integer.parseInt(productId)),
 					"Here is your Product!",true),HttpStatus.FOUND);
-		}
-		catch(Exception e)
-		{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
 	}
 	
+	
+	
+	//POST request to add a new Product
 	@PostMapping("/product")
 	public ResponseEntity<AppResponseProduct> addProduct(@Valid @RequestBody ProductDto product)
 	{
-		try
-		{
 			return new ResponseEntity<>
 			(new AppResponseProduct(p.addProduct(product),"New Product Created!",true),HttpStatus.CREATED);
-		}
-		catch(Exception e)
-		{
-			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-		}
+		
 	}
 	
+	
+	
+	//PUT request to update an existing product
 	@PutMapping("/product")
 	public ResponseEntity<AppResponseProduct> updateProduct(@Valid @RequestBody ProductDto product)
 	{
-		try
-		{
 			return new ResponseEntity<>
 			(new AppResponseProduct(p.updateProduct(product),"New Product Created!",true),HttpStatus.OK);
-		}
-		catch(Exception e)
-		{
-			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-		}
 	}	
 	
-	@DeleteMapping("/product/{ProductId}")
-	public ResponseEntity<AppResponseProduct> deleteProduct(@Valid @PathVariable String ProductId)
+	
+	
+	
+	//DELETE request to delete a particular product based on ID
+	@DeleteMapping("/product/{productId}")
+	public ResponseEntity<AppResponseProduct> deleteProduct(@Valid @PathVariable String productId)
 	{
-		try
-		{
+
 			return new ResponseEntity<>
-			(new AppResponseProduct(p.deleteProduct(Integer.parseInt(ProductId)),
+			(new AppResponseProduct(p.deleteProduct(Integer.parseInt(productId)),
 					"Product Deleted Successfully!",true),HttpStatus.OK);
-		}
-		catch(Exception e)
-		{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
 	}
 
 

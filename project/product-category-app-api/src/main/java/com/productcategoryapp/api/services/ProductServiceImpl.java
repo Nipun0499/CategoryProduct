@@ -24,18 +24,17 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
 	private ProductDao productDao;
 	
-//	@Autowired
 	private ModelMapper modelMapper=new ModelMapper();
 	Logger logger=LoggerFactory.getLogger(ProductController.class);
 
 
+	
+	// This methods return all the list of Product whose deleted status is not deleted
 	@Override
 	public List<ProductDto> getProduct() {
 		
 		
-		List<Product> p=productDao.findAll().stream()
-				.filter(i -> i.isDeleted()==false)
-				.collect(Collectors.toList());
+		List<Product> p=productDao.findByIsDeletedIsFalse();
 		List<ProductDto> pdto=new ArrayList<>();;
 		for(Product i : p)
 			pdto.add(productToProductDto(i));
@@ -48,28 +47,33 @@ public class ProductServiceImpl implements ProductService{
 		}
 	}
 
+	
+	
+	
+	// This methods return a particular product whose product Id is passed if exists in the database
 	@Override
-	public ProductDto getProduct(int ProductId) {
-		// TODO Auto-generated method stub
-		Optional<Product> p=productDao.findById(ProductId);
-		Product p1=p.orElseThrow(() -> new ResourceNotFoundException("Product","id",ProductId));
+	public ProductDto getProduct(int productId) {
+		Optional<Product> p=productDao.findById(productId);
+		Product p1=p.orElseThrow(() -> new ResourceNotFoundException("Product","id",productId));
 		logger.info("Product found!");
 		return productToProductDto(p1);
 		
 	}
 
+	
+	
+	//This method adds a new product to the database whose object is passed in the parameter
 	@Override
 	public ProductDto addProduct(ProductDto p) {
-		// TODO Auto-generated method stub
 		Product x=productDtoToProduct(p);
 		productDao.save(x);
-		// TODO Auto-generated method stub
 		logger.info("Product added!");
 		return productToProductDto(x);
 	}
 
 
 
+	//This methods update an existing product 
 	@Override
 	public ProductDto updateProduct(ProductDto p) {
 		
@@ -77,16 +81,17 @@ public class ProductServiceImpl implements ProductService{
 		Product x=productDtoToProduct(p);
 		productDao.save(x);
 		logger.info("Product updated!");
-		// TODO Auto-generated method stub
 		return productToProductDto(x);
 	}
 
 
 
+	
+	//This method deletes an existing product based on the productId passed
 	@Override
-	public ProductDto deleteProduct(int ProductId) {
-		Optional<Product> p=productDao.findById(ProductId);
-		Product p1=p.orElseThrow(() -> new ResourceNotFoundException("Product","id",ProductId));
+	public ProductDto deleteProduct(int productId) {
+		Optional<Product> p=productDao.findById(productId);
+		Product p1=p.orElseThrow(() -> new ResourceNotFoundException("Product","id",productId));
 		p1.setDeleted(true);
 		p1.setActive(false);
 		productDao.save(p1);
@@ -94,11 +99,20 @@ public class ProductServiceImpl implements ProductService{
 		return productToProductDto(p1);
 	}
 	
+	
+	
+	
+	//This object converts ProductDto to Product using ModelMapper 
 	public Product productDtoToProduct(ProductDto p)
 	{
 		Product product=this.modelMapper.map(p,Product.class);
 		return product;
 	}
+	
+	
+	
+	
+	//This object converts Product to ProductDto using ModelMapper 
 	public ProductDto productToProductDto(Product p)
 	{
 		ProductDto product=this.modelMapper.map(p,ProductDto.class);

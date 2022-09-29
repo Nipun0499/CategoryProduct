@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -37,6 +40,7 @@ import com.productcategoryapp.api.controllers.CategoryController;
 import com.productcategoryapp.api.dao.CategoryDao;
 import com.productcategoryapp.api.entity.Category;
 import com.productcategoryapp.api.payloads.CategoryDto;
+import com.productcategoryapp.api.payloads.ProductDto;
 import com.productcategoryapp.api.services.CategoryService;
 
 @ComponentScan(basePackages= "com.productcategoryapp.api")
@@ -72,8 +76,8 @@ public class CategoryControllerTests {
 	public void getAllCategoryTest() throws Exception
 	{
 		List<Category> list1=new ArrayList<Category>();
-		Category p1 = new Category(1, null,"Laptop","This category is of Laptop", new Date(), new Date(), true, false);
-	    Category p2 = new Category(2, null,"Hello","This category is of Laptop", new Date(), new Date(), true, false);
+		Category p1 = new Category(1, null,"Laptop","This category is of Laptop", new Date(), new Date());
+	    Category p2 = new Category(2, null,"Hello","This category is of Laptop", new Date(), new Date());
 	    list1.add(p1);
 	    list1.add(p2);
 	    List<CategoryDto> list= list1.stream().map((i)->modelMapper.map(i,CategoryDto.class))
@@ -93,22 +97,22 @@ public class CategoryControllerTests {
 	public void getCategoryTest() throws Exception
 	{
 		List<Category> list=new ArrayList<Category>();
-		Category p1 = new Category(1, null,"Laptop","This category is of Laptop", new Date(), new Date(), true, false);
+		Category p1 = new Category(1, null,"Laptop","This category is of Laptop", new Date(), new Date());
 	    list.add(p1);
 	    CategoryDto p2=modelMapper.map(p1, CategoryDto.class);
 	    when(cd.findById(1)).thenReturn(Optional.of(p1));
         when(c.getCategory(1)).thenReturn(p2);
         this.mockMvc.perform(get("/category/{category_id}",1))
         		.andExpect(status().isFound())
-        		.andExpect(MockMvcResultMatchers.jsonPath(".category_id").value(1))
-        		.andExpect(MockMvcResultMatchers.jsonPath(".category_name").value("Laptop"))
+        		.andExpect(MockMvcResultMatchers.jsonPath(".categoryId").value(1))
+        		.andExpect(MockMvcResultMatchers.jsonPath(".categoryName").value("Laptop"))
         		.andDo(print());
 	}
 	
 	@Test
 	public void postCategoryTest() throws Exception
 	{
-		CategoryDto p = new CategoryDto(1, null,"Laptop","This category is of Laptop", new Date(), new Date(), true, false);
+		CategoryDto p = new CategoryDto(1, null,"Laptop","This category is of Laptop", new Date(), new Date());
 		Category p1 = modelMapper.map(p, Category.class);
 		CategoryDto p2=modelMapper.map(p1, CategoryDto.class);
 		ObjectMapper mapper = new ObjectMapper();
@@ -127,7 +131,7 @@ public class CategoryControllerTests {
 	@Test
 	public void putCategoryTest() throws Exception
 	{
-		CategoryDto p = new CategoryDto(1, null,"Laptop","This category is of Laptop", new Date(), new Date(), true, false);
+		CategoryDto p = new CategoryDto(1, null,"Laptop","This category is of Laptop", new Date(), new Date());
 		Category p1 = modelMapper.map(p, Category.class);
 		CategoryDto p2=modelMapper.map(p1, CategoryDto.class);
 		ObjectMapper mapper = new ObjectMapper();
@@ -146,15 +150,57 @@ public class CategoryControllerTests {
 	@Test
 	public void deleteCategoryTest() throws Exception
 	{
-		CategoryDto p1 = new CategoryDto(1, null,"Laptop","This category is of Laptop", new Date(), new Date(), true, false);
-		CategoryDto p2 = new CategoryDto(1, null,"Laptop","This category is of Laptop", new Date(), new Date(), false,true);
-		when(c.deleteCategory(1)).thenReturn(p2);
+		CategoryDto p1 = new CategoryDto(1, null,"Laptop","This category is of Laptop", new Date(), new Date());
+		CategoryDto p2 = new CategoryDto(1, null,"Laptop","This category is of Laptop", new Date(), new Date());
+		p1.setDeleted(true);
+		p1.setActive(false);
+		when(c.deleteCategory(1)).thenReturn(p1);
         this.mockMvc.perform(delete("/category/{categroy_id}",1))
         		.andExpect(status().isOk())
         		.andExpect(MockMvcResultMatchers.jsonPath(".active").value(false))
         		.andExpect(MockMvcResultMatchers.jsonPath(".deleted").value(true))
         		.andDo(print());
 	}
+	@Test
+    void addCategoryTest2() throws Exception {
+		CategoryDto p1 = new CategoryDto(1, null,"Laptop","", new Date(), new Date());
+
+        when(cd.save(any())).thenReturn(p1);
+        when(c.addCategory(p1)).thenReturn(p1);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonBody = mapper.writeValueAsString(p1);
+
+        mockMvc
+                .perform(
+                        post("/category")
+                                .content(jsonBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertThat(result.getResolvedException() instanceof MethodArgumentNotValidException).isEqualTo(true))
+                .andDo(print());
+    }
+	@Test
+    void addCategoryTest3() throws Exception {
+		CategoryDto p1 = new CategoryDto(1, null,"","", new Date(), new Date());
+
+        when(cd.save(any())).thenReturn(p1);
+        when(c.addCategory(p1)).thenReturn(p1);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonBody = mapper.writeValueAsString(p1);
+
+        mockMvc
+                .perform(
+                        post("/category")
+                                .content(jsonBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertThat(result.getResolvedException() instanceof MethodArgumentNotValidException).isEqualTo(true))
+                .andDo(print());
+    }
 	
 	
 	
